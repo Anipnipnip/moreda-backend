@@ -2,18 +2,18 @@
   "name": "moreda-api",
   "version": "1.0.0",
   "description": "\"This is our capstone project team for Bangkit Academy\"",
-  "main": "index.js",
+  "main": "server.js",
   "type": "module",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "start": "nodemon server.js"
+    "start": "node server.js",
+    "dev": "nodemon server.js"
   },
   "author": "Muhammad Fauzan Hanif",
   "license": "ISC",
   "dependencies": {
     "@google-cloud/cloud-sql-connector": "^1.4.0",
     "bcrypt": "^5.1.1",
-    "bcryptjs": "^2.4.3",
     "body-parser": "^1.20.3",
     "cors": "^2.8.5",
     "dotenv": "^16.4.5",
