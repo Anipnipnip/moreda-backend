@@ -1,4 +1,5 @@
-import jwt from "jsonwebtoken";
+
+/*import jwt from "jsonwebtoken";
 import { invalidatedTokens } from "./authController.js";
 
 const authenticateToken = (req, res, next) => {
@@ -25,3 +26,5 @@ const authenticateToken = (req, res, next) => {
 };
 
 export { authenticateToken };
+
+*/

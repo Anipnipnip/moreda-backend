@@ -49,11 +49,38 @@ const loginController = async(req, res) => {
     }
 };
 
-const regisController = async(req, res) => {
+const regisController = async (req, res) => {
+    const { username, email, password } = req.body;
+
+    // Validasi input
+    if (!username) {
+        return res.status(400).json({
+            message: 'Username is required',
+            success: false
+        });
+    }
+
+    if (!email) {
+        return res.status(400).json({
+            message: 'Email is required',
+            success: false
+        });
+    }
+
+    if (!password) {
+        return res.status(400).json({
+            message: 'Password is required',
+            success: false
+        });
+    }
+
+    // Hash password
+    const hashedPassword = bcrypt.hashSync(password, 10);
+
     const data = {
-        username: req.body.username,
-        email: req.body.email,
-        password: bcrypt.hashSync(req.body.password, 10)
+        username,
+        email,
+        password: hashedPassword
     };
 
     try {
@@ -65,11 +92,15 @@ const regisController = async(req, res) => {
         });
     } catch (error) {
         return res.status(500).json({
-            message: error
+            message: 'An error occurred',
+            success: false,
+            error: error.message
         });
-    };
+    }
 };
 
+
+/*
 const logoutController = (req, res) => {
     const token = req.headers["authorization"]?.split(" ")[1];
     if (token) {
@@ -79,5 +110,6 @@ const logoutController = (req, res) => {
       return res.status(400).json({ message: "Token tidak ditemukan" });
     }
   };
+*/
 
-export { loginController, regisController, logoutController };
+export { loginController, regisController };
