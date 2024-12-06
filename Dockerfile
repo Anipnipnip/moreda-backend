@@ -13,8 +13,5 @@ RUN npm install
 # Copy semua file dari folder proyek ke dalam container
 COPY . .
 
-# Expose port yang digunakan aplikasi (dari file .env)
-EXPOSE 3306
-
 # Jalankan aplikasi
 CMD ["npm", "start"]
