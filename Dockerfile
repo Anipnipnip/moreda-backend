@@ -1,20 +1,20 @@
-# Gunakan image resmi Node.js dari Docker Hub sebagai base image
-FROM node:18
+# Gunakan base image Node.js versi terbaru (LTS)
+FROM node:18-alpine
 
-# Set working directory di dalam container
-WORKDIR /usr/src/app
+# Set work directory di dalam container
+WORKDIR /app
 
-# Salin package.json dan package-lock.json ke dalam container
+# Copy file package.json dan package-lock.json ke container
 COPY package*.json ./
 
-# Install dependencies aplikasi
+# Install dependencies
 RUN npm install
 
-# Salin seluruh kode sumber aplikasi ke dalam container
+# Copy semua file dari folder proyek ke dalam container
 COPY . .
 
-# Expose port yang digunakan aplikasi, default untuk aplikasi Node.js adalah 8080
-EXPOSE 8080
+# Expose port yang digunakan aplikasi (dari file .env)
+EXPOSE 3306
 
-# Perintah untuk menjalankan aplikasi
-CMD [ "npm", "start" ]
+# Jalankan aplikasi
+CMD ["npm", "start"]
