@@ -1,27 +1,27 @@
-import {login, signUp} from '../models/authModel.js'
-import bcrypt from 'bcrypt';
+import { login, signUp } from '../models/authModel.js';
+import bcrypt from 'bcryptjs';  // Ganti bcrypt dengan bcryptjs
 import jwt from 'jsonwebtoken';
 import dotenv from 'dotenv';
 
 dotenv.config();
 
-const loginController = async(req, res) => {
+const loginController = async (req, res) => {
     const data = {
         email: req.body.email,
         password: req.body.password
     };
 
-    try{
+    try {
         const result = await login(data);
 
-        if(result.length > 0){
+        if (result.length > 0) {
             const row = result[0];
-            const passwordMatch = await bcrypt.compare(data.password, row.password);
+            const passwordMatch = await bcrypt.compare(data.password, row.password); // Menggunakan bcryptjs
 
-            if(passwordMatch){
-                const payload = {email: row.email};
-                const token = jwt.sign(payload, process.env.JWT_SECRET, {expiresIn: '1 day'});
-    
+            if (passwordMatch) {
+                const payload = { email: row.email };
+                const token = jwt.sign(payload, process.env.JWT_SECRET, { expiresIn: '1 day' });
+
                 return res.status(200).json({
                     id: row.id,
                     username: row.username,
@@ -29,23 +29,23 @@ const loginController = async(req, res) => {
                     success: true,
                     token: token
                 });
-            }else{
+            } else {
                 return res.status(400).json({
                     message: 'Invalid password',
                     success: false
                 });
-            };
-        }else{
+            }
+        } else {
             return res.status(400).json({
                 message: 'Invalid email',
-                success: false 
-            })
+                success: false
+            });
         }
-    }catch(error) {
-        console.log(error)
+    } catch (error) {
+        console.log(error);
         return res.status(500).json({
             message: 'error'
-        })
+        });
     }
 };
 
@@ -74,8 +74,8 @@ const regisController = async (req, res) => {
         });
     }
 
-    // Hash password
-    const hashedPassword = bcrypt.hashSync(password, 10);
+    // Hash password dengan bcryptjs (menggunakan async/await)
+    const hashedPassword = await bcrypt.hash(password, 10); // Menggunakan bcryptjs
 
     const data = {
         username,
@@ -98,18 +98,5 @@ const regisController = async (req, res) => {
         });
     }
 };
-
-
-/*
-const logoutController = (req, res) => {
-    const token = req.headers["authorization"]?.split(" ")[1];
-    if (token) {
-      invalidatedTokens.add(token); // Tambahkan token ke daftar invalid
-      return res.status(200).json({ message: "Logout berhasil" });
-    } else {
-      return res.status(400).json({ message: "Token tidak ditemukan" });
-    }
-  };
-*/
 
 export { loginController, regisController };
