@@ -10,7 +10,7 @@ import dotenv from 'dotenv';
 
 dotenv.config();
 const app = express();
-const port = process.env.SERVER_PORT || 5000;
+const port = process.env.SERVER_PORT;
 
 app.use(express.json());
 app.use(bodyParser.urlencoded({ extended: true }));
@@ -26,5 +26,5 @@ app.use('/movies', searchRouter);
 app.use('/wishlist', listsRouter);  // Tambahkan routing lists
 
 app.listen(port, () => {
-    console.log('Server running on port', port);
+    console.log('Server running on port');
 });
