@@ -10,7 +10,7 @@ import dotenv from 'dotenv';
 
 dotenv.config();
 const app = express();
-const port = process.env.SERVER_PORT || 5000;
+const port = process.env.DB_PORT || 5000;
 
 app.use(express.json());
 app.use(bodyParser.urlencoded({ extended: true }));
