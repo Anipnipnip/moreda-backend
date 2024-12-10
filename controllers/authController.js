@@ -20,11 +20,11 @@ const loginController = async (req, res) => {
 
             if (passwordMatch) {
                 // Payload untuk JWT
-                const payload = { userId: row.id };  // Kirim `id` sebagai `userId` dalam JWT payload
+                const payload = { userId: row.userId };  // Kirim `id` sebagai `userId` dalam JWT payload
                 const token = jwt.sign(payload, process.env.JWT_SECRET, { expiresIn: '1d' });
 
                 return res.status(200).json({
-                    userId: row.id,  // Kirim `id` dari database sebagai `userId`
+                    userId: row.userId,  // Kirim `id` dari database sebagai `userId`
                     username: row.username,
                     email: row.email,
                     success: true,

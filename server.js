@@ -1,4 +1,3 @@
-// server.js
 import express from 'express';
 import bodyParser from 'body-parser';
 import cors from 'cors';
@@ -10,7 +9,7 @@ import dotenv from 'dotenv';
 
 dotenv.config();
 const app = express();
-const port = process.env.DB_PORT || 5000;
+const port = process.env.DB_PORT || 3306;
 
 app.use(express.json());
 app.use(bodyParser.urlencoded({ extended: true }));
@@ -23,8 +22,7 @@ app.use(cors({
 
 app.use('/auth', authRouter);
 app.use('/movies', searchRouter);
-app.use('/user', listsRouter);
-//app.use('/user', listsRouter);  // Update routing untuk wishlist menjadi lebih deskriptif
+app.use('/wishlist', listsRouter);  // Menambahkan route wishlist
 
 app.listen(port, () => {
     console.log('Server running on port', port);

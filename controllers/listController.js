@@ -1,52 +1,39 @@
-// controllers/listsController.js
-import { addMovieToList, getMoviesByUser } from '../models/listModel.js';
+import { addToWishlist, getWishlist } from '../models/listModel.js';
 
-// Controller untuk menambah atau mengupdate like pada movie di daftar
-export const addToList = async (req, res) => {
-    const { userId } = req.params; // Ambil userId dari params
-    const { movieId, like } = req.body;
-
-    if (!userId || !movieId) {
-        return res.status(400).json({
-            message: 'User ID and Movie ID are required.',
-            success: false
-        });
-    }
-
-    if (typeof like !== 'boolean') {
-        return res.status(400).json({
-            message: 'Like must be a boolean value.',
-            success: false
-        });
-    }
+// Controller untuk menambahkan film ke wishlist
+export const addToWishlistController = async (req, res) => {
+    const { movieId } = req.body;
+    const userId = req.userId;  // Ambil userId dari JWT token atau session
 
     try {
-        const result = await addMovieToList(userId, movieId, like);
-        return res.status(200).json({
-            message: result.success ? 'Movie added to list.' : 'Movie updated in list.',
-            success: true
-        });
+        const result = await addToWishlist(userId, movieId);
+        if (result) {
+            return res.status(200).json({
+                message: 'Movie added to wishlist successfully',
+                success: true
+            });
+        }
     } catch (error) {
-        res.status(500).json({
-            message: 'An error occurred while adding movie to list.',
-            error: error.message,
-            success: false
+        return res.status(500).json({
+            message: 'Error adding movie to wishlist',
+            success: false,
+            error: error.message
         });
     }
 };
 
-// Controller untuk mengambil daftar movie berdasarkan userId
-export const getUserMovies = async (req, res) => {
-    const { userId } = req.params; // Ambil userId dari params
+// Controller untuk mendapatkan wishlist berdasarkan userId
+export const getWishlistController = async (req, res) => {
+    const userId = req.userId;  // Ambil userId dari JWT token atau session
 
     try {
-        const movies = await getMoviesByUser(userId); // Menggunakan userId dari params
-        return res.status(200).json(movies);
+        const wishlist = await getWishlist(userId);
+        return res.status(200).json(wishlist);
     } catch (error) {
-        res.status(500).json({
-            message: 'Error fetching movies for the user.',
-            error: error.message,
-            success: false
+        return res.status(500).json({
+            message: 'Error fetching wishlist',
+            success: false,
+            error: error.message
         });
     }
 };

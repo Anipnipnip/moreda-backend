@@ -1,30 +1,20 @@
+import jwt from 'jsonwebtoken';
+import dotenv from 'dotenv';
 
-/*import jwt from "jsonwebtoken";
-import { invalidatedTokens } from "./authController.js";
+dotenv.config();
 
-const authenticateToken = (req, res, next) => {
-  const headerAuth = req.headers["authorization"];
-  const token = headerAuth && headerAuth.split(" ")[1];
+export const authenticate = (req, res, next) => {
+    const token = req.headers['authorization']?.split(' ')[1]; // Ambil token dari header Authorization
 
-  if (!token) {
-    return res.status(401).json({ message: "Unauthorized: Missing token" });
-  }
-
-  try {
-    const decodedToken = jwt.verify(token, process.env.JWT_SECRET);
-
-    if (invalidatedTokens.has(token)) {
-      return res.status(401).json({ message: "Unauthorized: Token invalidated" });
+    if (!token) {
+        return res.status(403).json({ message: 'No token provided', success: false });
     }
 
-    req.authData = decodedToken;
-    next();
-  } catch (error) {
-    console.error("Error decoding token:", error);
-    return res.status(401).json({ message: "Unauthorized: Invalid token" });
-  }
+    try {
+        const decoded = jwt.verify(token, process.env.JWT_SECRET);
+        req.userId = decoded.userId;  // Simpan userId dari payload JWT
+        next();
+    } catch (error) {
+        return res.status(401).json({ message: 'Invalid or expired token', success: false });
+    }
 };
-
-export { authenticateToken };
-
-*/

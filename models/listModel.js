@@ -1,37 +1,27 @@
-// models/listsModel.js
 import connection from "../config/db.js";
 
-// Fungsi untuk menambahkan data ke tabel lists (liked/unliked movie)
-export const addMovieToList = async (userId, movieId, liked) => {
+// Menambahkan film ke wishlist
+export const addToWishlist = async (userId, movieId) => {
     try {
-        const db = await connection();
-        const query = `
-            INSERT INTO lists (userId, movieId, \`liked\`)
-            VALUES (?, ?, ?)
-            ON DUPLICATE KEY UPDATE \`liked\` = ?;
-        `;
-        await db.query(query, [userId, movieId, liked, liked]);
-        return { success: true };
+        const pool = await connection();
+        const query = 'INSERT INTO lists (userId, movieId, liked, time) VALUES (?, ?, true, NOW())';
+        await pool.query(query, [userId, movieId]);
+        return true;
     } catch (error) {
-        console.error('Error adding movie to list:', error);
+        console.error("Error adding movie to wishlist:", error);
         throw error;
     }
 };
 
-// Fungsi untuk mengambil daftar movie berdasarkan userId
-export const getMoviesByUser = async (userId) => {
+// Mendapatkan wishlist berdasarkan userId
+export const getWishlist = async (userId) => {
     try {
-        const db = await connection();
-        const query = `
-            SELECT movies.*, lists.\`liked\`, lists.time 
-            FROM lists 
-            JOIN movies ON lists.movieId = movies.movieId 
-            WHERE lists.userId = ?;
-        `;
-        const [movies] = await db.query(query, [userId]);
-        return movies;
+        const pool = await connection();
+        const query = 'SELECT m.movieId, m.title, m.genres FROM movies m JOIN lists l ON m.movieId = l.movieId WHERE l.userId = ? AND l.liked = true';
+        const [rows] = await pool.query(query, [userId]);
+        return rows;
     } catch (error) {
-        console.error('Error fetching movies for user:', error);
+        console.error("Error fetching wishlist:", error);
         throw error;
     }
 };
