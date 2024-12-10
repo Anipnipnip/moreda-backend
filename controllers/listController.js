@@ -3,7 +3,15 @@ import { addMovieToList, getMoviesByUser } from '../models/listModel.js';
 
 // Controller untuk menambah atau mengupdate like pada movie di daftar
 export const addToList = async (req, res) => {
-    const { userId, movieId, like } = req.body;
+    const { userId } = req.params; // Ambil userId dari params
+    const { movieId, like } = req.body;
+
+    if (!userId || !movieId) {
+        return res.status(400).json({
+            message: 'User ID and Movie ID are required.',
+            success: false
+        });
+    }
 
     if (typeof like !== 'boolean') {
         return res.status(400).json({
@@ -29,10 +37,10 @@ export const addToList = async (req, res) => {
 
 // Controller untuk mengambil daftar movie berdasarkan userId
 export const getUserMovies = async (req, res) => {
-    const { userId } = req.params;
+    const { userId } = req.params; // Ambil userId dari params
 
     try {
-        const movies = await getMoviesByUser(userId);
+        const movies = await getMoviesByUser(userId); // Menggunakan userId dari params
         return res.status(200).json(movies);
     } catch (error) {
         res.status(500).json({

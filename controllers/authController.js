@@ -19,15 +19,16 @@ const loginController = async (req, res) => {
             const passwordMatch = await bcrypt.compare(data.password, row.password); // Menggunakan bcryptjs
 
             if (passwordMatch) {
-                const payload = { email: row.email };
-                const token = jwt.sign(payload, process.env.JWT_SECRET, { expiresIn: '1 day' });
+                // Payload untuk JWT
+                const payload = { userId: row.id };  // Kirim `id` sebagai `userId` dalam JWT payload
+                const token = jwt.sign(payload, process.env.JWT_SECRET, { expiresIn: '1d' });
 
                 return res.status(200).json({
-                    id: row.id,
+                    userId: row.id,  // Kirim `id` dari database sebagai `userId`
                     username: row.username,
                     email: row.email,
                     success: true,
-                    token: token
+                    token: token  // Kirim token yang sudah di-generate
                 });
             } else {
                 return res.status(400).json({
@@ -44,7 +45,8 @@ const loginController = async (req, res) => {
     } catch (error) {
         console.log(error);
         return res.status(500).json({
-            message: 'error'
+            message: 'An error occurred while logging in',
+            success: false
         });
     }
 };
@@ -53,29 +55,15 @@ const regisController = async (req, res) => {
     const { username, email, password } = req.body;
 
     // Validasi input
-    if (!username) {
+    if (!username || !email || !password) {
         return res.status(400).json({
-            message: 'Username is required',
-            success: false
-        });
-    }
-
-    if (!email) {
-        return res.status(400).json({
-            message: 'Email is required',
-            success: false
-        });
-    }
-
-    if (!password) {
-        return res.status(400).json({
-            message: 'Password is required',
+            message: 'Username, Email, and Password are required',
             success: false
         });
     }
 
     // Hash password dengan bcryptjs (menggunakan async/await)
-    const hashedPassword = await bcrypt.hash(password, 10); // Menggunakan bcryptjs
+    const hashedPassword = await bcrypt.hash(password, 10); // Menggunakan bcryptjs untuk hashing password
 
     const data = {
         username,
@@ -91,8 +79,9 @@ const regisController = async (req, res) => {
             success: true
         });
     } catch (error) {
+        console.log(error);
         return res.status(500).json({
-            message: 'An error occurred',
+            message: 'An error occurred during registration',
             success: false,
             error: error.message
         });

@@ -23,8 +23,9 @@ app.use(cors({
 
 app.use('/auth', authRouter);
 app.use('/movies', searchRouter);
-app.use('/wishlist', listsRouter);  // Tambahkan routing lists
+app.use('/user', listsRouter);
+//app.use('/user', listsRouter);  // Update routing untuk wishlist menjadi lebih deskriptif
 
 app.listen(port, () => {
-    console.log('Server running on port');
+    console.log('Server running on port', port);
 });

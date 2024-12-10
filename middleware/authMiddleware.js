@@ -1,30 +1,17 @@
+import jwt from 'jsonwebtoken';
 
-/*import jwt from "jsonwebtoken";
-import { invalidatedTokens } from "./authController.js";
-
-const authenticateToken = (req, res, next) => {
-  const headerAuth = req.headers["authorization"];
-  const token = headerAuth && headerAuth.split(" ")[1];
-
-  if (!token) {
-    return res.status(401).json({ message: "Unauthorized: Missing token" });
-  }
-
-  try {
-    const decodedToken = jwt.verify(token, process.env.JWT_SECRET);
-
-    if (invalidatedTokens.has(token)) {
-      return res.status(401).json({ message: "Unauthorized: Token invalidated" });
+export const authenticate = (req, res, next) => {
+    const authHeader = req.headers.authorization;
+    if (!authHeader || !authHeader.startsWith('Bearer ')) {
+        return res.status(401).json({ message: 'Authentication required' });
     }
 
-    req.authData = decodedToken;
-    next();
-  } catch (error) {
-    console.error("Error decoding token:", error);
-    return res.status(401).json({ message: "Unauthorized: Invalid token" });
-  }
+    const token = authHeader.split(' ')[1];
+    try {
+        const decoded = jwt.verify(token, process.env.JWT_SECRET);
+        req.userId = decoded.userId; // Set userId ke request object
+        next();
+    } catch (error) {
+        res.status(403).json({ message: 'Invalid or expired token' });
+    }
 };
-
-export { authenticateToken };
-
-*/
