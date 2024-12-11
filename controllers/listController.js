@@ -46,6 +46,12 @@ export const getWishlistController = async (req, res) => {
             data: wishlist
         });
     } catch (error) {
+        console.error('Error in getWishlistController:', {
+            userId: req.userId,
+            error: error.message,
+            stack: error.stack
+        });
+
         return res.status(500).json({
             message: 'Error fetching wishlist',
             success: false,
