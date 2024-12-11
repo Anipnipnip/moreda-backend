@@ -4,7 +4,7 @@ import cors from 'cors';
 import morgan from 'morgan';
 import authRouter from './routes/authRoutes.js';
 import searchRouter from './routes/searchRoutes.js';
-import listsRouter from './routes/listRoutes.js';  // Import lists router
+import listsRouter from './routes/listRoutes.js';  
 import dotenv from 'dotenv';
 
 dotenv.config();
@@ -22,7 +22,7 @@ app.use(cors({
 
 app.use('/auth', authRouter);
 app.use('/movies', searchRouter);
-app.use('/wishlist', listsRouter);  // Menambahkan route wishlist
+app.use('/wishlist', listsRouter);  
 
 app.listen(port, () => {
     console.log('Server running on port', port);

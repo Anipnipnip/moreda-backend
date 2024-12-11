@@ -1,5 +1,5 @@
 import { login, signUp } from '../models/authModel.js';
-import bcrypt from 'bcryptjs';  // Ganti bcrypt dengan bcryptjs
+import bcrypt from 'bcryptjs';  
 import jwt from 'jsonwebtoken';
 import dotenv from 'dotenv';
 
@@ -16,7 +16,7 @@ const loginController = async (req, res) => {
 
         if (result.length > 0) {
             const row = result[0];
-            const passwordMatch = await bcrypt.compare(data.password, row.password); // Menggunakan bcryptjs
+            const passwordMatch = await bcrypt.compare(data.password, row.password); 
 
             if (passwordMatch) {
                 // Payload untuk JWT
@@ -62,7 +62,6 @@ const regisController = async (req, res) => {
         });
     }
 
-    // Hash password dengan bcryptjs (menggunakan async/await)
     const hashedPassword = await bcrypt.hash(password, 10); // Menggunakan bcryptjs untuk hashing password
 
     const data = {

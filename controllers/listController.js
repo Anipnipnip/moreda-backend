@@ -1,6 +1,5 @@
 import { addToWishlist, getWishlist } from '../models/listModel.js';
 
-// Controller untuk menambahkan film ke wishlist
 export const addToWishlistController = async (req, res) => {
     const { movieId } = req.body;
     const userId = req.userId;  // Ambil userId dari JWT token atau session
@@ -22,7 +21,6 @@ export const addToWishlistController = async (req, res) => {
     }
 };
 
-// Controller untuk mendapatkan wishlist berdasarkan userId
 export const getWishlistController = async (req, res) => {
     const userId = req.userId;  // Ambil userId dari JWT token atau session
 
