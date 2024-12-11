@@ -4,7 +4,7 @@ import { authenticate } from '../middleware/authMiddleware.js'; // Middleware un
 
 const router = express.Router();
 
-router.post('/add', authenticate, addToWishlistController);
-router.get('/get', authenticate, getWishlistController);
+router.post('/user/add', authenticate, addToWishlistController);
+router.get('/user/get', authenticate, getWishlistController);
 
 export default router;
