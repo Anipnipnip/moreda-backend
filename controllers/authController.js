@@ -1,5 +1,5 @@
 import { login, signUp } from '../models/authModel.js';
-import bcrypt from 'bcryptjs';  
+import bcrypt from 'bcryptjs';
 import jwt from 'jsonwebtoken';
 import dotenv from 'dotenv';
 
@@ -16,19 +16,24 @@ const loginController = async (req, res) => {
 
         if (result.length > 0) {
             const row = result[0];
-            const passwordMatch = await bcrypt.compare(data.password, row.password); 
+            const passwordMatch = await bcrypt.compare(data.password, row.password);
 
             if (passwordMatch) {
                 // Payload untuk JWT
-                const payload = { userId: row.userId };  // Kirim `id` sebagai `userId` dalam JWT payload
+                const payload = { userId: row.userId };
                 const token = jwt.sign(payload, process.env.JWT_SECRET, { expiresIn: '1d' });
 
                 return res.status(200).json({
-                    userId: row.userId,  // Kirim `id` dari database sebagai `userId`
-                    username: row.username,
-                    email: row.email,
+                    message: 'Login successful',
                     success: true,
-                    token: token  // Kirim token yang sudah di-generate
+                    data: {
+                        user: {
+                            userId: row.userId,
+                            username: row.username,
+                            email: row.email
+                        },
+                        token
+                    }
                 });
             } else {
                 return res.status(400).json({
@@ -46,7 +51,8 @@ const loginController = async (req, res) => {
         console.log(error);
         return res.status(500).json({
             message: 'An error occurred while logging in',
-            success: false
+            success: false,
+            error: error.message
         });
     }
 };
@@ -62,7 +68,7 @@ const regisController = async (req, res) => {
         });
     }
 
-    const hashedPassword = await bcrypt.hash(password, 10); // Menggunakan bcryptjs untuk hashing password
+    const hashedPassword = await bcrypt.hash(password, 10);
 
     const data = {
         username,
@@ -73,8 +79,8 @@ const regisController = async (req, res) => {
     try {
         await signUp(data);
 
-        return res.status(200).json({
-            message: 'Pendaftaran berhasil. Silahkan login',
+        return res.status(201).json({
+            message: 'Registration successful. Please login to continue.',
             success: true
         });
     } catch (error) {
